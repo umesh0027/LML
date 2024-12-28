@@ -26,12 +26,17 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-app.use(
-	cors({
-		origin: "*",
-		credentials: true,
-	})
-);
+// app.use(
+// 	cors({
+// 		origin: "*",
+// 		credentials: true,
+// 	})
+// );
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,  // Optional, if you're sending cookies
+}));
 
 
 
