@@ -26,12 +26,15 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-app.use(
-	cors({
-		origin: "*",
-		credentials: true,
-	})
-);
+// app.use(
+// 	cors({
+// 		origin: "*",
+// 		credentials: true,
+// 	})
+// );
+
+
+app.use(cors()); // Enable CORS for all routes
 
 
 
