@@ -87,13 +87,13 @@ function CategoryList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  // const BASE_URL = process.env.REACT_APP_BASE_URL;
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   // Fetch categories from the backend
   useEffect(() => {
     axios
-      // .get(`${BASE_URL}/notes/categories`)
-        .get("https://littlemorelearning.onrender.com/api/v1/notes/categories")
+      .get(`${BASE_URL}/notes/categories`)
+        // .get("https://littlemorelearning.onrender.com/api/v1/notes/categories")
       .then((response) => {
         setCategories(response.data.categories || []); // Ensure categories is an array
         setLoading(false);
