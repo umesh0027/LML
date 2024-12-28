@@ -83,7 +83,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function CategoryList() {
-  const [categories, setCategories] = useState([]); // Initialize as empty array
+  const [categories, setCategories] = useState([]); // Default to an empty array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -92,22 +92,17 @@ function CategoryList() {
   // Fetch categories from the backend
   useEffect(() => {
     axios
-      .get(`${BASE_URL}/notes/categories`) 
+      .get(`${BASE_URL}/notes/categories`)
       .then((response) => {
-        // Check if categories data is available in the response
-        if (response.data && Array.isArray(response.data.categories)) {
-          setCategories(response.data.categories);
-        } else {
-          setError("Categories data is not in the expected format.");
-        }
-        setLoading(false); 
+        setCategories(response.data.categories || []); // Ensure categories is an array
+        setLoading(false);
       })
       .catch((error) => {
         setError("Failed to load categories");
         setLoading(false);
         console.error("Error fetching categories:", error);
       });
-  }, [BASE_URL]);
+  }, []);
 
   if (loading) {
     return (
@@ -126,36 +121,42 @@ function CategoryList() {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6 py-16">
-        {categories.length === 0 ? (
-          <div className="text-center text-lg text-gray-500">No categories available</div>
-        ) : (
-          categories.map((category) => (
-            <div
-              key={category._id}
-              className="bg-white p-6 text-center rounded-lg shadow-lg hover:shadow-xl cursor-pointer transform transition-all duration-300 hover:scale-105 flex flex-col justify-between"
-            >
-              <div>
-                <h2 className="text-2xl font-semibold text-[#3b3092]">{category.name}</h2>
-                <p className="text-sm text-[#3b3092] mt-2">{category.description}</p>
+    <>
+      <div className="container mx-auto p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 px-6 py-16">
+          {Array.isArray(categories) && categories.length > 0 ? (
+            categories.map((category) => (
+              <div
+                key={category._id}
+                className="bg-white p-6 text-center rounded-lg shadow-lg hover:shadow-xl cursor-pointer transform transition-all duration-300 hover:scale-105 flex flex-col justify-between"
+              >
+                <div>
+                  <h2 className="text-2xl font-semibold text-[#3b3092]">
+                    {category.name}
+                  </h2>
+                  <p className="text-sm text-[#3b3092] mt-2">{category.description}</p>
+                </div>
+
+                <div className="mt-auto text-center ">
+                  <button
+                    onClick={() => navigate(`/category/${category._id}`)}
+                    className="bg-[#3b3092] text-white px-6 py-2 rounded-full hover:bg-[#ff3131]"
+                  >
+                    Explore
+                  </button>
+                </div>
               </div>
-              <div className="mt-auto text-center">
-                <button
-                  onClick={() => navigate(`/category/${category._id}`)}
-                  className="bg-[#3b3092] text-white px-6 py-2 rounded-full hover:bg-[#ff3131]"
-                >
-                  Explore
-                </button>
-              </div>
-            </div>
-          ))
-        )}
+            ))
+          ) : (
+            <div className="text-center text-xl text-gray-500">No categories available</div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
 export default CategoryList;
+
 
 
